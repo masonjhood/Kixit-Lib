@@ -1,0 +1,39 @@
+// Define the dimensions of the image
+var width = 640
+var height = 480
+
+// Define the scale of the image
+var scale = 3.0 / width
+
+// Define the maximum number of iterations
+var maxIterations = 100
+
+// Initialize the image
+var image = matrix(zeros: height, width)
+
+// Loop over each pixel in the image
+for row in 0..<height {
+    for col in 0..<width {
+        // Calculate the complex number corresponding to this pixel
+        var c = complex(scale * (col - width/2), scale * (row - height/2))
+
+        // Initialize the value of z to zero
+        var z = complex(0, 0)
+
+        // Iterate the formula z = z^2 + c until it diverges or the maximum number of iterations is reached
+        var iterations = 0
+        while abs(z) < 2 && iterations < maxIterations {
+            z = z * z + c
+            iterations += 1
+        }
+
+        // Calculate the color of the pixel based on the number of iterations
+        var color = iterations == maxIterations ? [0, 0, 0] : [iterations * 255 / maxIterations, iterations * 255 / maxIterations, 255]
+
+        // Set the color of the pixel in the image
+        image[row, col] = color
+    }
+}
+
+// Display the image
+show(image)
